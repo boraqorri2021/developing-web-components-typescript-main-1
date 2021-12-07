@@ -40,6 +40,7 @@ export class BoardComponent extends HTMLElement {
  AddBoardComponent(){
     var rows = parseInt(( < HTMLInputElement > document.getElementById("rowId")).value);
     var columns = parseInt(( < HTMLInputElement > document.getElementById("columnId")).value);
+    //create a new object of type Board calling the contructor
     let newBoard = new Board(rows, columns);
  }
 }

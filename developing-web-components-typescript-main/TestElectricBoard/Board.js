@@ -4,28 +4,26 @@ export class Board {
         this.rows = rows;
         this.columns = columns;
         this.backgroundColor = "#dcf1dc";
-        if (rows == 0 && columns == 0) {
-        }
-        else {
-            const element = document.getElementById('gridComponent');
-            var i;
-            var gridCells = "";
-            var columnNr = "";
-            for (i = 1; i <= rows * columns; i++) {
-                gridCells += `<div class="grid-item" id="gridItemID` + i + `">` +
-                    `<label style="
+        const element = document.getElementById('gridComponent');
+        var i;
+        var gridCells = "";
+        var columnNr = "";
+        //after getting the size of the board, we create the items in the grid, displayng the location also on each item
+        for (i = 1; i <= rows * columns; i++) {
+            gridCells += `<div class="grid-item" id="gridItemID` + i + `">` +
+                `<label style="
       font-size: small;
       color: #a6cdee;
       float: right;
       margin-top: 19px;
       padding-bottom: -18px;
       ">` + i + `</label></div>`;
-            }
-            for (i = 0; i < columns; i++) {
-                columnNr += "auto ";
-            }
-            element.setAttribute("style", "grid-template-columns:" + columnNr + ";");
-            element.innerHTML = `<div class="alert alert-info" role="alert" style="width:97%">
+        }
+        for (i = 0; i < columns; i++) {
+            columnNr += "auto ";
+        }
+        element.setAttribute("style", "grid-template-columns:" + columnNr + ";");
+        element.innerHTML = `<div class="alert alert-info" role="alert" style="width:97%">
     Click on the icon to switch state!
     </div>
     <table style="width: 20%;float: left;margin-right: 25%;margin-bottom:10px;">
@@ -33,25 +31,15 @@ export class Board {
     <td><img id="switchingID" style="width: 80px; height: 42px;" src="./Images/switch-on-button-vectors.jpg" /></td>
     </tr>
     </table>` +
-                `<div id="gridcontainerID" class="grid-container"> ` + gridCells + `</div>`;
-            const grid = document.getElementById('gridcontainerID');
-            const electricComponentForm = document.getElementById('electricComponentDivID');
-            grid.setAttribute("style", "grid-template-columns:" + columnNr + ";background-color:" + this.backgroundColor + ";");
-            electricComponentForm.setAttribute("style", "display: block;");
-            let switchBtn = document.getElementById("switchingID");
-            switchBtn.addEventListener("click", (e) => this.switchState());
-        }
+            `<div id="gridcontainerID" class="grid-container"> ` + gridCells + `</div>`;
+        const grid = document.getElementById('gridcontainerID');
+        const electricComponentForm = document.getElementById('electricComponentDivID');
+        grid.setAttribute("style", "grid-template-columns:" + columnNr + ";background-color:" + this.backgroundColor + ";");
+        electricComponentForm.setAttribute("style", "display: block;");
+        let switchBtn = document.getElementById("switchingID");
+        switchBtn.addEventListener("click", (e) => this.switchState());
     }
-    getInstance() {
-        let boardC = new Board(0, 0);
-        boardC.state = this.state;
-        boardC.columns = this.columns;
-        boardC.rows = this.rows;
-        boardC.backgroundColor = this.backgroundColor;
-        Board.board = boardC;
-        return Board.board;
-    }
-    //get and sets: turn on/off, background, size of the board, electricnumberelements
+    //get and sets: 
     get state() {
         return this._state;
     }
@@ -79,14 +67,17 @@ export class Board {
     switchState() {
         const grid = document.getElementById('gridcontainerID');
         const img = document.getElementById('switchingID');
+        var i;
+        //If previous board state was true then the board is going to switch into Off.
         if (this.state == true) {
             this.state = Board.boardState = false;
             this.backgroundColor = "#b0aaaa";
             grid.style.backgroundColor = this.backgroundColor;
             img.src = "./Images/switch-off-button-vectors (2).jpg";
-            var i;
+            //All electrical components are goint to display as off(changing the image and label to Off, but 
+            //their state is not going to change.)
             for (i = 0; i < Board.electricComponents.length; i++) {
-                Board.electricComponents[i].SwitchToOffState(Board.electricComponents[i].location);
+                Board.electricComponents[i].SwitchToOffState(Board.electricComponents[i].location, true);
             }
         }
         else {
@@ -95,6 +86,14 @@ export class Board {
             ;
             grid.style.backgroundColor = this.backgroundColor;
             img.src = "./Images/switch-on-button-vectors.jpg";
+            //If board is switching into On state, then all electrical devices are going to switch to their previous
+            //state, If state was On(true) then the image and label are going to change into On state. Electrical state does not change.
+            for (i = 0; i < Board.electricComponents.length; i++) {
+                if (Board.electricComponents[i].electronicState)
+                    Board.electricComponents[i].SwitchToOnState(Board.electricComponents[i].location, true);
+                else
+                    Board.electricComponents[i].SwitchToOffState(Board.electricComponents[i].location, true);
+            }
         }
     }
 }
