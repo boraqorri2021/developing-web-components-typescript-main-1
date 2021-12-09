@@ -1,6 +1,7 @@
 "use strict";
 exports.__esModule = true;
 exports.Board = void 0;
+var Electric_js_1 = require("./Electric.js");
 var Board = /** @class */ (function () {
     function Board(rows, columns) {
         var _this = this;
@@ -81,10 +82,10 @@ var Board = /** @class */ (function () {
             this.backgroundColor = "#b0aaaa";
             grid.style.backgroundColor = this.backgroundColor;
             img.src = "./Images/switch-off-button-vectors (2).jpg";
-            //All electrical components are goint to display as off(changing the image and label to Off, but 
-            //their state is not going to change.)
+            //All electrical components are goint to display as off(changing the image and label to Off and the State parameter, but 
+            //electronic state is not going to change.)
             for (i = 0; i < Board.electricComponents.length; i++) {
-                Board.electricComponents[i].SwitchToOffState(Board.electricComponents[i].location, true);
+                Board.electricComponents[i].SwitchToOffState(Board.electricComponents[i].location);
             }
         }
         else {
@@ -97,11 +98,25 @@ var Board = /** @class */ (function () {
             //state, If state was On(true) then the image and label are going to change into On state. Electrical state does not change.
             for (i = 0; i < Board.electricComponents.length; i++) {
                 if (Board.electricComponents[i].electronicState)
-                    Board.electricComponents[i].SwitchToOnState(Board.electricComponents[i].location, true);
+                    Board.electricComponents[i].SwitchToOnState(Board.electricComponents[i].location);
                 else
-                    Board.electricComponents[i].SwitchToOffState(Board.electricComponents[i].location, true);
+                    Board.electricComponents[i].SwitchToOffState(Board.electricComponents[i].location);
             }
         }
+    };
+    //Add Electrical Component, 
+    Board.AddElectricalComponent = function (name, location, fontcolor, onImage, offImage) {
+        var newElectronic = new Electric_js_1.Electronic(name, location, fontcolor, onImage, offImage);
+        //After creating the object, we add the object to Board as an array item.
+        Board.electricComponents.push(newElectronic);
+    };
+    //After clicking the remove button, the electrical object is removed from the array in Board class and the div that 
+    //was dispayed in the UI is removed also.
+    Board.RemoveElectricalComponent = function (location) {
+        var index = Board.electricComponents.indexOf(Electric_js_1.Electronic.getComponentByLocation(location));
+        Board.electricComponents.splice(index, 1);
+        var electricComponent = document.getElementById('childItemID' + location);
+        electricComponent.remove();
     };
     Board.electricComponents = [];
     Board.boardState = true;

@@ -23,9 +23,7 @@ export class Electronic {
         let imgOffClick = document.getElementById("imgItemOff" + location);
         imgOffClick.addEventListener("click", (e) => this.SwitchState(this.location));
         let imgRemoveClick = document.getElementById("removebtnID" + this.location);
-        imgRemoveClick.addEventListener("click", (e) => this.RemoveComponent(this.location));
-        //After creating the object, we add the object to Board as an array item.
-        Board.electricComponents.push(this.getInstance());
+        imgRemoveClick.addEventListener("click", (e) => Board.RemoveElectricalComponent(this.location));
     }
     //get and sets: 
     get name() {
@@ -52,6 +50,12 @@ export class Electronic {
     set electronicState(value) {
         this._electronicState = value;
     }
+    get State() {
+        return this._state;
+    }
+    set State(value) {
+        this._state = value;
+    }
     get onImage() {
         return this._onImage;
     }
@@ -74,21 +78,13 @@ export class Electronic {
         }
         return null;
     }
-    // Method to return the instance of the Object that is created
-    getInstance() {
-        let electronic = new Electronic(null, null, null, null, null);
-        electronic.name = this.name;
-        electronic.fontcolor = this.fontcolor;
-        electronic.location = this.location;
-        electronic.onImage = this.onImage;
-        electronic.offImage = this.offImage;
-        return electronic;
+    SetState(location) {
     }
-    //Method fro switching state, the board property is added to tell us if state is changing when Board state is changing or
+    //Method for switching state, the board property is added to tell us if state is changing when Board state is changing or
     //after clicking the electrical item image
-    SwitchToOnState(location, board) {
-        if (!board)
-            this.electronicState = true;
+    SwitchToOnState(location) {
+        this.State = true;
+        this.electronicState = true;
         var electricComponentOffImage = document.getElementById('imgItemOff' + location);
         var electricComponentOnImage = document.getElementById('imgItemOn' + location);
         var electricComponentOfflbl = document.getElementById('stateOffLbl' + location);
@@ -98,9 +94,8 @@ export class Electronic {
         electricComponentOnlbl.setAttribute("style", "display:block;color:green;float: right;margin-right: -30px;margin-top: -7px;");
         electricComponentOfflbl.setAttribute("style", "display:none;color:red;float: right;margin-right: -30px;margin-top: -7px;");
     }
-    SwitchToOffState(location, board) {
-        if (!board)
-            this.electronicState = false;
+    SwitchToOffState(location) {
+        this.State = false;
         var electricComponentOffImage = document.getElementById('imgItemOff' + location);
         var electricComponentOnImage = document.getElementById('imgItemOn' + location);
         var electricComponentOfflbl = document.getElementById('stateOffLbl' + location);
@@ -111,23 +106,21 @@ export class Electronic {
         electricComponentOfflbl.setAttribute("style", "display:block;color:red;float: right;margin-right: -30px;margin-top: -7px;");
     }
     SwitchState(location) {
-        if (Board.boardState == false) {
-            alert("Electronic Board is turned off!");
+        if (Board.boardState == false && this.electronicState == false) {
+            this.electronicState = true;
+            this.SwitchToOffState(location);
         }
-        if (this.electronicState == true) {
-            this.SwitchToOffState(location, false);
+        else if (Board.boardState == false && this.electronicState == true) {
+            this.electronicState = false;
+            this.SwitchToOffState(location);
+        }
+        else if (Board.boardState == true && this.electronicState == false) {
+            this.SwitchToOnState(location);
         }
         else {
-            this.SwitchToOnState(location, false);
+            this.electronicState = false;
+            this.SwitchToOffState(location);
         }
-    }
-    //After clicking the remove button, the electrical object is removed from the array in Board class and the div that 
-    //was dispayed in the UI is removed also.
-    RemoveComponent(location) {
-        var index = Board.electricComponents.indexOf(Electronic.getComponentByLocation(location));
-        Board.electricComponents.slice(index, 1);
-        const electricComponent = document.getElementById('childItemID' + location);
-        electricComponent.remove();
     }
 }
 //# sourceMappingURL=Electric.js.map

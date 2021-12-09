@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 exports.__esModule = true;
 exports.ElectricComponent = void 0;
+var Board_js_1 = require("./Board.js");
 var Electric_js_1 = require("./Electric.js");
 var ElectricComponent = /** @class */ (function (_super) {
     __extends(ElectricComponent, _super);
@@ -75,7 +76,7 @@ var ElectricComponent = /** @class */ (function (_super) {
         else {
             onImg = offImg = canvasImg;
         }
-        var electricalComponent = new Electric_js_1.Electronic(electricComponentName, electricComponentLocation, electricComponentForecolor, onImg, offImg);
+        var electricalComponent = Board_js_1.Board.AddElectricalComponent(electricComponentName, electricComponentLocation, electricComponentForecolor, onImg, offImg);
     };
     return ElectricComponent;
 }(HTMLElement));

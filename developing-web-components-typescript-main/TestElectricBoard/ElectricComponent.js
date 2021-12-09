@@ -1,3 +1,4 @@
+import { Board } from "./Board.js";
 import { Electronic } from "./Electric.js";
 export class ElectricComponent extends HTMLElement {
     constructor() {
@@ -92,7 +93,7 @@ export class ElectricComponent extends HTMLElement {
         else {
             onImg = offImg = canvasImg;
         }
-        let electricalComponent = new Electronic(electricComponentName, electricComponentLocation, electricComponentForecolor, onImg, offImg);
+        let electricalComponent = Board.AddElectricalComponent(electricComponentName, electricComponentLocation, electricComponentForecolor, onImg, offImg);
     }
 }
 customElements.define('electric-components', ElectricComponent);

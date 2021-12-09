@@ -19,9 +19,7 @@ var Electronic = /** @class */ (function () {
         var imgOffClick = document.getElementById("imgItemOff" + location);
         imgOffClick.addEventListener("click", function (e) { return _this.SwitchState(_this.location); });
         var imgRemoveClick = document.getElementById("removebtnID" + this.location);
-        imgRemoveClick.addEventListener("click", function (e) { return _this.RemoveComponent(_this.location); });
-        //After creating the object, we add the object to Board as an array item.
-        Board_js_1.Board.electricComponents.push(this.getInstance());
+        imgRemoveClick.addEventListener("click", function (e) { return Board_js_1.Board.RemoveElectricalComponent(_this.location); });
     }
     Object.defineProperty(Electronic.prototype, "name", {
         //get and sets: 
@@ -64,6 +62,16 @@ var Electronic = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(Electronic.prototype, "State", {
+        get: function () {
+            return this._state;
+        },
+        set: function (value) {
+            this._state = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(Electronic.prototype, "onImage", {
         get: function () {
             return this._onImage;
@@ -94,21 +102,13 @@ var Electronic = /** @class */ (function () {
         }
         return null;
     };
-    // Method to return the instance of the Object that is created
-    Electronic.prototype.getInstance = function () {
-        var electronic = new Electronic(null, null, null, null, null);
-        electronic.name = this.name;
-        electronic.fontcolor = this.fontcolor;
-        electronic.location = this.location;
-        electronic.onImage = this.onImage;
-        electronic.offImage = this.offImage;
-        return electronic;
+    Electronic.prototype.SetState = function (location) {
     };
-    //Method fro switching state, the board property is added to tell us if state is changing when Board state is changing or
+    //Method for switching state, the board property is added to tell us if state is changing when Board state is changing or
     //after clicking the electrical item image
-    Electronic.prototype.SwitchToOnState = function (location, board) {
-        if (!board)
-            this.electronicState = true;
+    Electronic.prototype.SwitchToOnState = function (location) {
+        this.State = true;
+        this.electronicState = true;
         var electricComponentOffImage = document.getElementById('imgItemOff' + location);
         var electricComponentOnImage = document.getElementById('imgItemOn' + location);
         var electricComponentOfflbl = document.getElementById('stateOffLbl' + location);
@@ -118,9 +118,8 @@ var Electronic = /** @class */ (function () {
         electricComponentOnlbl.setAttribute("style", "display:block;color:green;float: right;margin-right: -30px;margin-top: -7px;");
         electricComponentOfflbl.setAttribute("style", "display:none;color:red;float: right;margin-right: -30px;margin-top: -7px;");
     };
-    Electronic.prototype.SwitchToOffState = function (location, board) {
-        if (!board)
-            this.electronicState = false;
+    Electronic.prototype.SwitchToOffState = function (location) {
+        this.State = false;
         var electricComponentOffImage = document.getElementById('imgItemOff' + location);
         var electricComponentOnImage = document.getElementById('imgItemOn' + location);
         var electricComponentOfflbl = document.getElementById('stateOffLbl' + location);
@@ -131,23 +130,21 @@ var Electronic = /** @class */ (function () {
         electricComponentOfflbl.setAttribute("style", "display:block;color:red;float: right;margin-right: -30px;margin-top: -7px;");
     };
     Electronic.prototype.SwitchState = function (location) {
-        if (Board_js_1.Board.boardState == false) {
-            alert("Electronic Board is turned off!");
+        if (Board_js_1.Board.boardState == false && this.electronicState == false) {
+            this.electronicState = true;
+            this.SwitchToOffState(location);
         }
-        if (this.electronicState == true) {
-            this.SwitchToOffState(location, false);
+        else if (Board_js_1.Board.boardState == false && this.electronicState == true) {
+            this.electronicState = false;
+            this.SwitchToOffState(location);
+        }
+        else if (Board_js_1.Board.boardState == true && this.electronicState == false) {
+            this.SwitchToOnState(location);
         }
         else {
-            this.SwitchToOnState(location, false);
+            this.electronicState = false;
+            this.SwitchToOffState(location);
         }
-    };
-    //After clicking the remove button, the electrical object is removed from the array in Board class and the div that 
-    //was dispayed in the UI is removed also.
-    Electronic.prototype.RemoveComponent = function (location) {
-        var index = Board_js_1.Board.electricComponents.indexOf(Electronic.getComponentByLocation(location));
-        Board_js_1.Board.electricComponents.slice(index, 1);
-        var electricComponent = document.getElementById('childItemID' + location);
-        electricComponent.remove();
     };
     return Electronic;
 }());

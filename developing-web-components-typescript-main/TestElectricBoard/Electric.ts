@@ -3,6 +3,7 @@ import { Board } from "./Board.js";
 export class Electronic{
     private _name: string;
     private _location: number;
+    private _state: boolean;
     private _electronicState: boolean;
     private _fontcolor : string;
     private _onImage : string;
@@ -34,9 +35,7 @@ export class Electronic{
          imgOffClick.addEventListener("click", (e:Event) => this.SwitchState(this.location));
 
          let imgRemoveClick = document.getElementById("removebtnID" + this.location );
-         imgRemoveClick.addEventListener("click", (e:Event) => this.RemoveComponent(this.location));
-         //After creating the object, we add the object to Board as an array item.
-          Board.electricComponents.push(this.getInstance());
+         imgRemoveClick.addEventListener("click", (e:Event) => Board.RemoveElectricalComponent(this.location));
 }
 
     //get and sets: 
@@ -65,6 +64,12 @@ export class Electronic{
     public set electronicState(value: boolean) {
         this._electronicState = value;
     }
+    public get State(): boolean {
+        return this._state;
+    }
+    public set State(value: boolean) {
+        this._state = value;
+    }
     public get onImage(): string {
         return this._onImage;
     }
@@ -88,21 +93,18 @@ export class Electronic{
         }
         return null;
         }
-// Method to return the instance of the Object that is created
-        public  getInstance(): Electronic {
-                let electronic = new Electronic(null, null, null, null, null);
-                electronic.name = this.name;
-                electronic.fontcolor = this.fontcolor;
-                electronic.location = this.location;
-                electronic.onImage = this.onImage;
-                electronic.offImage = this.offImage;
-                return electronic;
+
+        SetState(location: number, ){
+            
+                
         }
-    //Method fro switching state, the board property is added to tell us if state is changing when Board state is changing or
+
+    //Method for switching state, the board property is added to tell us if state is changing when Board state is changing or
     //after clicking the electrical item image
-    SwitchToOnState(location: number, board: boolean){
-        if(!board)
-            this.electronicState = true;
+    SwitchToOnState(location: number){
+
+        this.State = true;
+        this.electronicState = true;
         var electricComponentOffImage = (< HTMLInputElement >document.getElementById('imgItemOff' + location));
         var electricComponentOnImage = (< HTMLInputElement >document.getElementById('imgItemOn' + location));
         var electricComponentOfflbl = (< HTMLInputElement >document.getElementById('stateOffLbl' + location));
@@ -114,9 +116,9 @@ export class Electronic{
         electricComponentOfflbl.setAttribute("style", "display:none;color:red;float: right;margin-right: -30px;margin-top: -7px;");
     
     }
-    SwitchToOffState(location: number, board:boolean){
-        if(!board)
-            this.electronicState = false;
+    SwitchToOffState(location: number){
+
+        this.State = false;
         var electricComponentOffImage = (< HTMLInputElement >document.getElementById('imgItemOff' + location));
         var electricComponentOnImage = (< HTMLInputElement >document.getElementById('imgItemOn' + location));
         var electricComponentOfflbl = (< HTMLInputElement >document.getElementById('stateOffLbl' + location));
@@ -128,23 +130,24 @@ export class Electronic{
         electricComponentOfflbl.setAttribute("style", "display:block;color:red;float: right;margin-right: -30px;margin-top: -7px;");
     }
     SwitchState(location: number){
-        if(Board.boardState == false){
-            alert("Electronic Board is turned off!");
-        }
-        if(this.electronicState == true){
-            this.SwitchToOffState(location, false);
-        }
-        else{
-           this.SwitchToOnState(location, false);
-        }
-    }
-//After clicking the remove button, the electrical object is removed from the array in Board class and the div that 
-//was dispayed in the UI is removed also.
-    RemoveComponent(location : number){
-        var index = Board.electricComponents.indexOf(Electronic.getComponentByLocation(location));
-        Board.electricComponents.slice(index, 1);
-        const electricComponent: HTMLElement = document.getElementById('childItemID' + location ) as HTMLElement
-        electricComponent.remove();
+        if(Board.boardState == false && this.electronicState == false)
+            {
+                this.electronicState = true;
+                this.SwitchToOffState(location);
+            }
+            else if(Board.boardState == false && this.electronicState == true)
+            {
+                this.electronicState = false;
+                this.SwitchToOffState(location);
+            }
+            else if( Board.boardState == true && this.electronicState == false)
+            {
+                this.SwitchToOnState(location);
+            }
+            else {
+                this.electronicState = false;
+                this.SwitchToOffState(location);
+            }
     }
       
 }
