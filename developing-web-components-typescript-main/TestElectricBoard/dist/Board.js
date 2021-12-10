@@ -105,8 +105,7 @@ var Board = /** @class */ (function () {
         }
     };
     //Add Electrical Component, 
-    Board.AddElectricalComponent = function (name, location, fontcolor, onImage, offImage) {
-        var newElectronic = new Electric_js_1.Electronic(name, location, fontcolor, onImage, offImage);
+    Board.AddElectricalComponent = function (newElectronic) {
         //After creating the object, we add the object to Board as an array item.
         Board.electricComponents.push(newElectronic);
     };

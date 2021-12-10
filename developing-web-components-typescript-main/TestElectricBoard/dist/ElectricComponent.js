@@ -76,7 +76,8 @@ var ElectricComponent = /** @class */ (function (_super) {
         else {
             onImg = offImg = canvasImg;
         }
-        var electricalComponent = Board_js_1.Board.AddElectricalComponent(electricComponentName, electricComponentLocation, electricComponentForecolor, onImg, offImg);
+        var newElectronic = new Electric_js_1.Electronic(electricComponentName, electricComponentLocation, electricComponentForecolor, onImg, offImg);
+        var electricalComponent = Board_js_1.Board.AddElectricalComponent(newElectronic);
     };
     return ElectricComponent;
 }(HTMLElement));

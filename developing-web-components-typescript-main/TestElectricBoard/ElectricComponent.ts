@@ -100,7 +100,9 @@ if(displayimage == "none"){
 else{
     onImg  = offImg =  canvasImg;
 }
-let electricalComponent = Board.AddElectricalComponent(electricComponentName, electricComponentLocation, electricComponentForecolor, onImg, offImg);
+let newElectronic = new Electronic(electricComponentName, electricComponentLocation, electricComponentForecolor, onImg, offImg);
+
+let electricalComponent = Board.AddElectricalComponent(newElectronic);
 
 }
 }

@@ -110,9 +110,7 @@ export class Board {
     }
 
     //Add Electrical Component, 
-public static AddElectricalComponent(name: string, location: number, fontcolor:string, onImage: string, offImage: string){
-    let newElectronic = new Electronic(name, location, fontcolor, onImage, offImage);
-
+public static AddElectricalComponent(newElectronic: Electronic){
     //After creating the object, we add the object to Board as an array item.
     Board.electricComponents.push(newElectronic);
     }
